@@ -1,43 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FutureLearn - Login</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FutureLearn - Mobile OTP Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-  <div style="max-width:400px; margin:auto; padding:20px;">
-    <h1>FutureLearn</h1>
-    <p>Email/Password login ka form abhi nahi hai, lekin aap mobile se login kar sakte hain.</p>
-  </div>
-
-  <!-- Mobile OTP Login Section -->
-  <div style="background:#f0f0f0; padding:20px; margin:20px auto; max-width:400px; border-radius:10px; text-align:center;">
-    <h3>📱 मोबाइल नंबर से लॉगिन करें</h3>
-    <input type="tel" id="mobileNumber" placeholder="+91 9876543210" style="padding:10px; width:80%; margin:5px;">
-    <button id="sendOtpBtn" style="padding:10px 20px; background:blue; color:white; border:none; border-radius:5px;">OTP भेजें</button>
-    <div id="recaptcha-container" style="margin:5px;"></div>
-    <div id="otpSection" style="display:none; margin-top:10px;">
-      <input type="text" id="otpCode" placeholder="6 अंकों का OTP डालें" style="padding:10px; width:80%; margin:5px;">
-      <button id="verifyBtn" style="padding:10px 20px; background:green; color:white; border:none; border-radius:5px;">लॉगिन करें</button>
+    <div style="max-width:400px; margin:100px auto; text-align:center;">
+        <h2>📱 Mobile Number se Login</h2>
+        <input type="tel" id="mobile" placeholder="+91 9876543210" style="padding:10px; width:90%; margin:5px;">
+        <br>
+        <button id="sendBtn" style="padding:10px 20px; background:blue; color:white;">Send OTP</button>
+        <div id="recaptcha-container"></div>
+        <div id="otpBox" style="display:none; margin-top:15px;">
+            <input type="text" id="otp" placeholder="Enter 6-digit OTP" style="padding:10px; width:90%;">
+            <br>
+            <button id="verifyBtn" style="padding:10px 20px; background:green; color:white; margin-top:5px;">Verify & Login</button>
+        </div>
+        <p id="message" style="margin-top:15px; color:green;"></p>
     </div>
-    <p id="message" style="color:green; margin-top:10px;"></p>
-  </div>
 
-  <!-- Firebase SDKs (जरूरी) -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
 
-  <script>
-    // // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+    <script>
+        // const firebaseConfig = {
   apiKey: "AIzaSyBL8UoZy9F2b0hP0EPdEH9Z0InSnfjMC5w",
   authDomain: "future-learn-85baa.firebaseapp.com",
   projectId: "future-learn-85baa",
@@ -47,54 +35,37 @@ const firebaseConfig = {
   measurementId: "G-ZX4W49CGCP"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+        // Firebase init
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    // Mobile OTP Login code
-    let confirmationResult;
-    let recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-      size: 'invisible',
-      callback: () => {}
-    });
-
-    document.getElementById('sendOtpBtn').onclick = () => {
-      let phone = document.getElementById('mobileNumber').value;
-      if (!phone) {
-        alert("मोबाइल नंबर लिखें (जैसे +91 9876543210)");
-        return;
-      }
-      if (!phone.startsWith('+')) phone = '+' + phone;
-
-      auth.signInWithPhoneNumber(phone, recaptchaVerifier)
-        .then(result => {
-          confirmationResult = result;
-          document.getElementById('otpSection').style.display = 'block';
-          document.getElementById('message').innerText = "OTP भेज दिया गया!";
-        })
-        .catch(err => {
-          alert("Error: " + err.message);
-          recaptchaVerifier.render().then(widgetId => recaptchaVerifier.reset(widgetId));
+        let confirmationResult;
+        // reCAPTCHA
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            size: 'invisible',
+            callback: () => {}
         });
-    };
 
-    document.getElementById('verifyBtn').onclick = () => {
-      let otp = document.getElementById('otpCode').value;
-      if (!otp) {
-        alert("OTP डालें");
-        return;
-      }
-      confirmationResult.confirm(otp)
-        .then(user => {
-          alert("लॉगिन सफल! " + user.user.phoneNumber);
-          // Redirect chahiye to yahan likhein: window.location.href = "/dashboard.html";
-        })
-        .catch(() => alert("गलत OTP, फिर से कोशिश करें"));
-    };
-  </script>
+        document.getElementById('sendBtn').onclick = () => {
+            let phone = document.getElementById('mobile').value;
+            if (!phone) { alert("Number likho"); return; }
+            if (!phone.startsWith('+')) phone = '+' + phone;
+            auth.signInWithPhoneNumber(phone, window.recaptchaVerifier)
+                .then((result) => {
+                    confirmationResult = result;
+                    document.getElementById('otpBox').style.display = 'block';
+                    document.getElementById('message').innerText = "OTP bhej diya!";
+                })
+                .catch((err) => alert("Error: " + err.message));
+        };
+
+        document.getElementById('verifyBtn').onclick = () => {
+            let code = document.getElementById('otp').value;
+            if (!code) { alert("OTP likho"); return; }
+            confirmationResult.confirm(code)
+                .then((user) => alert("Login ho gaya! Welcome " + user.user.phoneNumber))
+                .catch(() => alert("OTP galat hai"));
+        };
+    </script>
 </body>
 </html>
