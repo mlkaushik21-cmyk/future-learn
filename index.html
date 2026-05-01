@@ -8,5 +8,98 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
+</body>
 </html>
+
+
+
+
+
+
+
+
+
+<!-- ========== MOBILE OTP LOGIN SECTION (Start) ========== -->
+<div style="background:#f0f0f0; padding:20px; margin:20px; border-radius:10px; text-align:center;">
+  <h3>📱 मोबाइल नंबर से लॉगिन करें</h3>
+  <input type="tel" id="mobileNumber" placeholder="+91 9876543210" style="padding:10px; width:80%; margin:5px;">
+  <button id="sendOtpBtn" style="padding:10px 20px; background:blue; color:white; border:none; border-radius:5px;">OTP भेजें</button>
+  <div id="recaptcha-container" style="margin:5px;"></div>
+  <div id="otpSection" style="display:none; margin-top:10px;">
+    <input type="text" id="otpCode" placeholder="6 अंकों का OTP डालें" style="padding:10px; width:80%; margin:5px;">
+    <button id="verifyBtn" style="padding:10px 20px; background:green; color:white; border:none; border-radius:5px;">लॉगिन करें</button>
+  </div>
+  <p id="message" style="color:green; margin-top:10px;"></p>
+</div>
+
+<script>
+  // अगर Firebase पहले से initialize है तो ठीक, नहीं तो error आएगा।
+  // मान लेते हैं कि आपका Firebase config पहले से कहीं मौजूद है।
+  // यदि नहीं है, तो आपको नीचे दिए गए "FIREBASE CONFIG" वाले हिस्से को uncomment करके अपनी config डालनी होगी।
+
+  /*
+  // ------ FIREBASE CONFIG (अगर पहले से नहीं है तो इसे uncomment करें और अपनी config डालें) ------
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    // ... अपनी अन्य config values
+  };
+  firebase.initializeApp(firebaseConfig);
+  // -----------------------------------------------------------------------------------
+  */
+
+  // OTP login code (यह तब काम करेगा जब Firebase already initialized हो)
+  if (typeof firebase !== 'undefined' && firebase.auth) {
+    let confirmationResult;
+    const auth = firebase.auth();
+    
+    // reCAPTCHA setup
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+      size: 'invisible',
+      callback: () => {}
+    });
+
+    document.getElementById('sendOtpBtn').onclick = () => {
+      let phone = document.getElementById('mobileNumber').value;
+      if (!phone) {
+        alert("कृपया मोबाइल नंबर लिखें (जैसे +91 9876543210)");
+        return;
+      }
+      if (!phone.startsWith('+')) phone = '+' + phone;
+      
+      auth.signInWithPhoneNumber(phone, window.recaptchaVerifier)
+        .then(result => {
+          confirmationResult = result;
+          document.getElementById('otpSection').style.display = 'block';
+          document.getElementById('message').innerText = "OTP भेज दिया गया!";
+        })
+        .catch(err => {
+          alert("Error: " + err.message);
+          // reCAPTCHA reset
+          window.recaptchaVerifier.render().then(widgetId => window.recaptchaVerifier.reset(widgetId));
+        });
+    };
+
+    document.getElementById('verifyBtn').onclick = () => {
+      let otp = document.getElementById('otpCode').value;
+      if (!otp) {
+        alert("OTP डालें");
+        return;
+      }
+      confirmationResult.confirm(otp)
+        .then(user => {
+          alert("लॉगिन सफल! स्वागत है " + user.user.phoneNumber);
+          // आप चाहें तो यहाँ कोई redirect लगा सकते हैं, जैसे:
+          // window.location.href = "/dashboard.html";
+        })
+        .catch(() => alert("गलत OTP, फिर से कोशिश करें"));
+    };
+  } else {
+    document.getElementById('message').innerText = "Firebase not loaded. कृपया पहले Firebase config डालें।";
+    console.error("Firebase not found in page.");
+  }
+</script>
+<!-- ========== MOBILE OTP LOGIN SECTION (End) ========== -->
