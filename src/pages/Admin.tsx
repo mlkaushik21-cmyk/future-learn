@@ -38,6 +38,7 @@ export default function Admin() {
             <option value="note">Note</option>
             <option value="course">Course</option>
             <option value="test">Test</option>
+            <option value="workbook">Workbook/Worksheet</option>
           </select>
         </div>
         <div>
