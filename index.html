@@ -3,319 +3,86 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FutureLearn Email Login</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <title>FutureLearn Academy</title>
   <style>
-    :root {
-      --bg: #f7f6f2;
-      --surface: #ffffff;
-      --surface-2: #f3f0ec;
-      --text: #28251d;
-      --muted: #6f6a61;
-      --border: #d8d2ca;
-      --primary: #01696f;
-      --primary-hover: #0c4e54;
-      --success: #2f7a37;
-      --error: #a13544;
-      --radius: 18px;
-      --shadow: 0 20px 50px rgba(0,0,0,0.08);
+    :root{
+      --bg:#f7f8fc;--text:#1f2937;--muted:#6b7280;--primary:#4f46e5;--primary2:#7c3aed;--card:#ffffff;--line:#e5e7eb;--ok:#16a34a;--warn:#ea580c;
     }
-
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: 'Satoshi', sans-serif;
-      background: linear-gradient(160deg, #f7f6f2 0%, #efeae3 100%);
-      color: var(--text);
-      display: grid;
-      place-items: center;
-      padding: 20px;
-    }
-
-    .card {
-      width: 100%;
-      max-width: 460px;
-      background: rgba(255,255,255,0.92);
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      padding: 32px;
-      backdrop-filter: blur(12px);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 28px;
-    }
-
-    .brand-mark {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      background: var(--primary);
-      color: #fff;
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-      font-weight: 700;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
-      line-height: 1.1;
-    }
-
-    p {
-      color: var(--muted);
-      font-size: 0.98rem;
-      line-height: 1.6;
-      margin: 8px 0 0;
-    }
-
-    .panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px;
-      margin-top: 20px;
-    }
-
-    label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    input {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: #fff;
-      font: inherit;
-      color: var(--text);
-      outline: none;
-    }
-
-    input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(1, 105, 111, 0.12);
-    }
-
-    .btn {
-      width: 100%;
-      margin-top: 14px;
-      border: 0;
-      border-radius: 14px;
-      padding: 14px 16px;
-      font: inherit;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 180ms ease;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .btn-primary:hover { background: var(--primary-hover); }
-    .btn-secondary {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-    }
-
-    .msg {
-      display: none;
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      font-size: 0.92rem;
-      line-height: 1.5;
-    }
-
-    .msg.show { display: block; }
-    .msg.info { background: #e7f3f4; color: #0d5b60; }
-    .msg.success { background: #e6f4ea; color: var(--success); }
-    .msg.error { background: #fbe9ec; color: var(--error); }
-
-    .steps {
-      margin-top: 18px;
-      padding-left: 18px;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .hidden { display: none; }
-
-    .top-note {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-top: 8px;
-    }
+    *{box-sizing:border-box} body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+    a{text-decoration:none;color:inherit}
+    .nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:5}
+    .wrap{max-width:1200px;margin:auto;padding:0 16px}
+    .navin{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+    .logo{font-weight:800;color:var(--primary);font-size:22px}.menu{display:flex;gap:16px;flex-wrap:wrap}
+    .hero{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;padding:56px 0}
+    .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:center}
+    .hero h1{font-size:42px;line-height:1.1;margin:0 0 12px}.hero p{font-size:17px;opacity:.95}
+    .btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}.btn{padding:12px 18px;border-radius:12px;font-weight:700;border:none;cursor:pointer}
+    .btn-light{background:#fff;color:var(--primary)} .btn-dark{background:#111827;color:#fff}
+    .hero-card,.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 25px rgba(0,0,0,.05)}
+    .hero-card{color:var(--text);padding:18px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}.stat{padding:16px;border-radius:14px;background:#fff;color:var(--text)}
+    section{padding:42px 0} h2{margin:0 0 8px;font-size:30px} .sub{color:var(--muted);margin:0 0 18px}
+    .classes{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.class-card{padding:16px}.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:var(--primary);font-size:12px;font-weight:700}
+    .subject-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.tag{background:#f3f4f6;border-radius:999px;padding:6px 10px;font-size:12px}
+    .feature{padding:18px}.feature h3,.class-card h3,.course h3{margin:10px 0 8px}
+    .course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.course{overflow:hidden}.thumb{height:160px;background:linear-gradient(135deg,#dbeafe,#e9d5ff);display:flex;align-items:center;justify-content:center;font-size:42px}
+    .pad{padding:16px}.meta{color:var(--muted);font-size:14px}
+    .twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px}.list{padding:16px}.list li{margin:10px 0;color:var(--muted)}
+    .tests{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.test{padding:16px}.footer{background:#111827;color:#d1d5db;padding:28px 0;margin-top:18px}
+    .loginbox{padding:18px}.loginbox input,.search{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin:8px 0}
+    .small{font-size:13px;color:var(--muted)}
+    @media (max-width:980px){.hero-grid,.twocol{grid-template-columns:1fr}.classes{grid-template-columns:repeat(2,1fr)}.grid3,.course-grid,.tests,.stats{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:640px){.hero h1{font-size:32px}.classes,.grid3,.course-grid,.tests,.stats{grid-template-columns:1fr}.menu{display:none}}
   </style>
 </head>
 <body>
-  <main class="card">
-    <div class="brand">
-      <div class="brand-mark">F</div>
-      <div>
-        <h1>FutureLearn Login</h1>
-        <p>Password ke bina email link se sign in karo.</p>
-      </div>
-    </div>
+  <nav class="nav"><div class="wrap navin"><div class="logo">FutureLearn Academy</div><div class="menu"><a href="#classes">Classes</a><a href="#subjects">Subjects</a><a href="#videos">Videos</a><a href="#notes">Notes</a><a href="#tests">Tests</a></div></div></nav>
+  <header class="hero"><div class="wrap hero-grid"><div><span class="badge">Classes 1 to 10</span><h1>School learning platform for every student</h1><p>English, Mathematics, and Science ke liye videos, notes, exercises, test series, progress dashboard, aur simple student experience.</p><div class="btns"><a class="btn btn-light" href="#classes">Start Learning</a><a class="btn btn-dark" href="#dashboard">Open Dashboard</a></div><div class="stats"><div class="stat"><strong>10</strong><br><span class="small">Classes</span></div><div class="stat"><strong>3</strong><br><span class="small">Core subjects</span></div><div class="stat"><strong>300+</strong><br><span class="small">Lesson blocks</span></div><div class="stat"><strong>120+</strong><br><span class="small">Tests & practice</span></div></div></div><div class="hero-card"><h3>Student Login Preview</h3><div class="loginbox"><input placeholder="Student email or mobile"><input placeholder="Password or OTP"><button class="btn btn-dark" style="width:100%">Login</button><p class="small">Demo layout only. Real auth can be connected later.</p></div></div></div></header>
 
-    <section class="panel" id="requestPanel">
-      <label for="email">Email address</label>
-      <input id="email" type="email" placeholder="name@example.com" autocomplete="email" />
-      <button class="btn btn-primary" id="sendLinkBtn">Send login link</button>
-      <div class="msg" id="requestMsg"></div>
-      <ol class="steps">
-        <li>Email likho.</li>
-        <li>Inbox mein login link khol do.</li>
-        <li>Wapas isi page par sign-in complete ho jayega.</li>
-      </ol>
-    </section>
+  <section id="classes"><div class="wrap"><h2>Classes</h2><p class="sub">Har class ke liye alag learning area, subject cards, aur study material sections.</p><div class="classes">
+    <div class="card class-card"><span class="badge">Class 1</span><h3>Foundation Start</h3><div class="subject-list"><span class="tag">English</span><span class="tag">Mathematics</span><span class="tag">Science</span></div></div>
+    <div class="card class-card"><span class="badge">Class 2</span><h3>Basics Builder</h3><div class="subject-list"><span class="tag">English</span><span class="tag">Mathematics</span><span class="tag">Science</span></div></div>
+    <div class="card class-card"><span class="badge">Class 3</span><h3>Concept Growth</h3><div class="subject-list"><span class="tag">English</span><span class="tag">Mathematics</span><span class="tag">Science</span></div></div>
+    <div class="card class-card"><span class="badge">Class 4</span><h3>Learning Advance</h3><div class="subject-list"><span class="tag">English</span><span class="tag">Mathematics</span><span class="tag">Science</span></div></div>
+    <div class="card class-card"><span class="badge">Class 5</span><h3>Middle Prep</h3><div class="subject-list"><span class="tag">English</span><span class="tag">Mathematics</span><span class="tag">Science</span></div></div>
+    <div class="card class-card"><span class="badge">Class 6</span><h3>Strong Concepts</h3><div class="subject-list"><span class="tag">English</span><span class="tag">Mathematics</span><span class="tag">Science</span></div></div>
+    <div class="card class-card"><span class="badge">Class 7</span><h3>Skill Building</h3><div class="subject-list"><span class="tag">English</span><span class="tag">Mathematics</span><span class="tag">Science</span></div></div>
+    <div class="card class-card"><span class="badge">Class 8</span><h3>Exam Focus</h3><div class="subject-list"><span class="tag">English</span><span class="tag">Mathematics</span><span class="tag">Science</span></div></div>
+    <div class="card class-card"><span class="badge">Class 9</span><h3>Board Ready</h3><div class="subject-list"><span class="tag">English</span><span class="tag">Mathematics</span><span class="tag">Science</span></div></div>
+    <div class="card class-card"><span class="badge">Class 10</span><h3>Top Score Track</h3><div class="subject-list"><span class="tag">English</span><span class="tag">Mathematics</span><span class="tag">Science</span></div></div>
+  </div></div></section>
 
-    <section class="panel hidden" id="completePanel">
-      <label for="confirmEmail">Confirm email</label>
-      <input id="confirmEmail" type="email" placeholder="same email again if needed" autocomplete="email" />
-      <button class="btn btn-primary" id="completeBtn">Complete sign in</button>
-      <button class="btn btn-secondary" id="backBtn" type="button">Back</button>
-      <div class="msg" id="completeMsg"></div>
-      <p class="top-note">Agar aapne link dusre device par khola hai, to email dobara likhna pad sakta hai.</p>
-    </section>
-  </main>
+  <section id="subjects"><div class="wrap"><h2>Platform Features</h2><p class="sub">PhysicsWallah-type learning flow ke liye core student modules.</p><div class="grid3">
+    <div class="card feature"><h3>Video Classes</h3><p class="meta">Chapter-wise lectures, topic playlist, teacher intro, watch progress, continue learning button.</p></div>
+    <div class="card feature"><h3>Smart Notes</h3><p class="meta">PDF notes, chapter summaries, formula sheets, printable worksheets, revision packs.</p></div>
+    <div class="card feature"><h3>Exercises</h3><p class="meta">Topic practice, solved examples, homework sheets, difficulty levels, answer review.</p></div>
+    <div class="card feature"><h3>Test Series</h3><p class="meta">Chapter tests, weekly tests, full syllabus mocks, instant score cards, leaderboard idea.</p></div>
+    <div class="card feature"><h3>Student Dashboard</h3><p class="meta">Recent lessons, progress bars, attendance idea, streak, saved notes, pending tests.</p></div>
+    <div class="card feature"><h3>Parent Support</h3><p class="meta">Result view, performance summary, weak topic alerts, monthly report concept.</p></div>
+  </div></div></section>
 
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import {
-      getAuth,
-      sendSignInLinkToEmail,
-      isSignInWithEmailLink,
-      signInWithEmailLink
-    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+  <section id="videos"><div class="wrap"><h2>Featured Lessons</h2><p class="sub">Demo lesson cards jo aap baad mein real video links se connect kar sakte ho.</p><div class="course-grid">
+    <div class="card course"><div class="thumb">🎥</div><div class="pad"><span class="badge">Mathematics</span><h3>Fractions Made Easy</h3><p class="meta">Class 5 • 24 min • Practice set included</p></div></div>
+    <div class="card course"><div class="thumb">🧪</div><div class="pad"><span class="badge">Science</span><h3>States of Matter</h3><p class="meta">Class 6 • 31 min • Notes available</p></div></div>
+    <div class="card course"><div class="thumb">📘</div><div class="pad"><span class="badge">English</span><h3>Grammar Basics</h3><p class="meta">Class 4 • 20 min • Worksheet included</p></div></div>
+  </div></div></section>
 
-    const firebaseConfig = {
-      apiKey: 'AIzaSyBL8UoZy9F2b0hP0EPdEH9Z0InSnfjMC5w',
-      authDomain: 'future-learn-85baa.firebaseapp.com',
-      projectId: 'future-learn-85baa',
-      storageBucket: 'future-learn-85baa.firebasestorage.app',
-      messagingSenderId: '960011606450',
-      appId: '1:960011606450:web:e0799215f4376981f0acab',
-      measurementId: 'G-ZX4W49CGCP'
-    };
+  <section id="notes"><div class="wrap twocol"><div class="card list"><h2>Notes & Material</h2><ul><li>Chapter notes PDF</li><li>Quick revision sheets</li><li>Formula and keywords lists</li><li>Homework practice files</li><li>Teacher handouts</li></ul></div><div class="card list"><h2>Exercises & Homework</h2><ul><li>MCQ practice sets</li><li>Short answer questions</li><li>Long answer worksheets</li><li>Topic-wise assignments</li><li>Auto-check answer flow concept</li></ul></div></div></section>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  <section id="tests"><div class="wrap"><h2>Test Series</h2><p class="sub">Har class aur subject ke liye alag test structure.</p><div class="tests">
+    <div class="card test"><span class="badge">Weekly</span><h3>Mini Test</h3><p class="meta">10 questions • 15 min</p></div>
+    <div class="card test"><span class="badge">Chapter</span><h3>Chapter Test</h3><p class="meta">25 questions • 30 min</p></div>
+    <div class="card test"><span class="badge">Monthly</span><h3>Progress Test</h3><p class="meta">Mixed topics • 45 min</p></div>
+    <div class="card test"><span class="badge">Final</span><h3>Mock Exam</h3><p class="meta">Full syllabus • 60 min</p></div>
+  </div></div></section>
 
-    const requestPanel = document.getElementById('requestPanel');
-    const completePanel = document.getElementById('completePanel');
-    const emailInput = document.getElementById('email');
-    const confirmEmail = document.getElementById('confirmEmail');
-    const sendLinkBtn = document.getElementById('sendLinkBtn');
-    const completeBtn = document.getElementById('completeBtn');
-    const backBtn = document.getElementById('backBtn');
+  <section id="dashboard"><div class="wrap"><h2>Student Dashboard Preview</h2><p class="sub">Abhi demo layout hai, baad mein login aur real data se connect kar sakte ho.</p><div class="grid3">
+    <div class="card feature"><h3>Continue Learning</h3><p class="meta">Last watched lesson: Class 7 Science — Nutrition in Plants</p></div>
+    <div class="card feature"><h3>Pending Work</h3><p class="meta">2 assignments, 1 chapter test, 3 notes downloads pending</p></div>
+    <div class="card feature"><h3>Performance</h3><p class="meta">Mathematics 82%, Science 76%, English 88%</p></div>
+  </div></div></section>
 
-    const requestMsg = document.getElementById('requestMsg');
-    const completeMsg = document.getElementById('completeMsg');
-
-    function showMessage(el, text, type) {
-      el.className = 'msg show ' + type;
-      el.textContent = text;
-    }
-
-    function clearMessage(el) {
-      el.className = 'msg';
-      el.textContent = '';
-    }
-
-    const actionCodeSettings = {
-      url: window.location.origin + window.location.pathname,
-      handleCodeInApp: true
-    };
-
-    sendLinkBtn.addEventListener('click', async () => {
-      clearMessage(requestMsg);
-      const email = emailInput.value.trim();
-
-      if (!email) {
-        showMessage(requestMsg, 'Please enter your email first.', 'error');
-        return;
-      }
-
-      sendLinkBtn.disabled = true;
-      sendLinkBtn.textContent = 'Sending...';
-
-      try {
-        await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-        localStorage.setItem('emailForSignIn', email);
-        showMessage(requestMsg, 'Login link sent. Inbox aur spam folder dono check karo.', 'success');
-      } catch (error) {
-        showMessage(requestMsg, 'Error: ' + error.message, 'error');
-      } finally {
-        sendLinkBtn.disabled = false;
-        sendLinkBtn.textContent = 'Send login link';
-      }
-    });
-
-    async function completeEmailLinkSignIn() {
-      clearMessage(completeMsg);
-      let email = localStorage.getItem('emailForSignIn') || confirmEmail.value.trim();
-
-      if (!email) {
-        showMessage(completeMsg, 'Same email dobara likho jo link bhejne ke liye use ki thi.', 'error');
-        return;
-      }
-
-      completeBtn.disabled = true;
-      completeBtn.textContent = 'Signing in...';
-
-      try {
-        const result = await signInWithEmailLink(auth, email, window.location.href);
-        localStorage.removeItem('emailForSignIn');
-        showMessage(completeMsg, 'Login successful: ' + result.user.email, 'success');
-        setTimeout(() => {
-          window.location.href = './dashboard.html';
-        }, 1200);
-      } catch (error) {
-        showMessage(completeMsg, 'Error: ' + error.message, 'error');
-      } finally {
-        completeBtn.disabled = false;
-        completeBtn.textContent = 'Complete sign in';
-      }
-    }
-
-    completeBtn.addEventListener('click', completeEmailLinkSignIn);
-    backBtn.addEventListener('click', () => {
-      completePanel.classList.add('hidden');
-      requestPanel.classList.remove('hidden');
-      clearMessage(completeMsg);
-    });
-
-    if (isSignInWithEmailLink(auth, window.location.href)) {
-      requestPanel.classList.add('hidden');
-      completePanel.classList.remove('hidden');
-      const savedEmail = localStorage.getItem('emailForSignIn');
-      if (savedEmail) confirmEmail.value = savedEmail;
-      showMessage(completeMsg, 'Link detect ho gaya. Zarurat ho to email confirm karke sign in complete karo.', 'info');
-    }
-  </script>
-
-  <!--
-  Firebase setup:
-  1. Firebase Console > Authentication > Sign-in method > Enable Email link (passwordless sign-in).
-  2. Firebase Console > Authentication > Settings > Authorized domains > add your Netlify domain.
-  3. Optional: create dashboard.html or replace redirect path after login.
-  Docs: Firebase says the redirect URL domain must be in Authorized Domains and handleCodeInApp must be true.
-  -->
+  <footer class="footer"><div class="wrap"><strong>FutureLearn Academy</strong><p>Demo education platform layout for classes 1 to 10 with videos, notes, exercises, tests, and dashboard sections.</p></div></footer>
 </body>
 </html>
