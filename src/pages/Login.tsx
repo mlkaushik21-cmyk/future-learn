@@ -3,6 +3,7 @@ import { auth, db } from '../firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,6 +12,18 @@ const Login = () => {
   const [role, setRole] = useState('student');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  // Already logged in hai toh redirect karo
+useEffect(() => {
+  const unsub = onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const snap = await getDoc(doc(db, 'users', user.uid));
+      const userRole = snap.data()?.role;
+      if (userRole === 'admin') navigate('/admin');
+      else navigate('/student');
+    }
+  });
+  return () => unsub();
+}, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
