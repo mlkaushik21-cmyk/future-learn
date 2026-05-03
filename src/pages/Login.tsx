@@ -10,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('student');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const goToRolePage = async (uid: string) => {
@@ -21,6 +22,7 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     try {
       if (isLogin) {
         const cred = await signInWithEmailAndPassword(auth, email, password);
@@ -36,8 +38,17 @@ const Login = () => {
       }
     } catch (err: any) {
       setError(err.message);
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <p className="text-gray-600 font-medium">Please wait...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -62,7 +73,7 @@ const Login = () => {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
+              abel className="block text-sm font-medium text-gray-700">Email</label>
               <input
                 type="email"
                 required
@@ -73,7 +84,7 @@ const Login = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Password</label>
+              abel className="block text-sm font-medium text-gray-700">Password</label>
               <input
                 type="password"
                 required
@@ -85,7 +96,7 @@ const Login = () => {
 
             {!isLogin && (
               <div>
-                <label className="block text-sm font-medium text-gray-700">Role</label>
+                1abel className="block text-sm font-medium text-gray-700">Role</label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
@@ -114,7 +125,17 @@ const Login = () => {
               {isLogin ? 'Create new account' : 'Sign in instead'}
             </button>
           </div>
-        </div>
+        </div><div>
+  <label className="block text-sm font-medium text-gray-700">Role</label>
+  <select
+    value={role}
+    onChange={(e) => setRole(e.target.value)}
+    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+  >
+    <option value="student">Student</option>
+    <option value="admin">Admin</option>
+  </select>
+</div>
       </div>
     </div>
   );
