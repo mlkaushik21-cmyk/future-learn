@@ -1,70 +1,279 @@
 <!DOCTYPE html>
-<html>
+<html lang="hi">
 <head>
     <title>FutureLearn - Mobile OTP Login</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .logo { font-size: 2.5rem; margin-bottom: 8px; }
+        h2 { color: #333; font-size: 1.4rem; margin-bottom: 6px; }
+        .subtitle { color: #888; font-size: 0.9rem; margin-bottom: 28px; }
+        .input-group {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .input-group input:focus { border-color: #667eea; }
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-success {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            margin-top: 10px;
+        }
+        .btn-success:hover { opacity: 0.9; transform: translateY(-1px); }
+        #otpBox { display: none; margin-top: 10px; }
+        #message {
+            margin-top: 16px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .msg-success { background: #e8f5e9; color: #2e7d32; display: block !important; }
+        .msg-error   { background: #ffebee; color: #c62828; display: block !important; }
+        .msg-info    { background: #e3f2fd; color: #1565c0; display: block !important; }
+        #recaptcha-container { margin-top: 10px; }
+        .timer { color: #888; font-size: 0.85rem; margin-top: 8px; }
+        .resend-btn {
+            background: none;
+            color: #667eea;
+            font-size: 0.85rem;
+            width: auto;
+            padding: 4px 8px;
+            text-decoration: underline;
+            display: none;
+            margin: 6px auto 0;
+        }
+
+        /* ✅ IMPORTANT: Firebase Error Banner */
+        #firebase-error {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            margin-bottom: 16px;
+            display: none;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-    <div style="max-width:400px; margin:100px auto; text-align:center;">
-        <h2>📱 Mobile Number se Login</h2>
-        <input type="tel" id="mobile" placeholder="+91 9876543210" style="padding:10px; width:90%; margin:5px;">
-        <br>
-        <button id="sendBtn" style="padding:10px 20px; background:blue; color:white;">Send OTP</button>
-        <div id="recaptcha-container"></div>
-        <div id="otpBox" style="display:none; margin-top:15px;">
-            <input type="text" id="otp" placeholder="Enter 6-digit OTP" style="padding:10px; width:90%;">
-            <br>
-            <button id="verifyBtn" style="padding:10px 20px; background:green; color:white; margin-top:5px;">Verify & Login</button>
+    <div class="card">
+        <div class="logo">📚</div>
+        <h2>FutureLearn</h2>
+        <p class="subtitle">Mobile Number se Login karo</p>
+
+        <!-- Firebase Config Error Warning -->
+        <div id="firebase-error">
+            ⚠️ Firebase config galat lag raha hai. Console check karo (F12).
         </div>
-        <p id="message" style="margin-top:15px; color:green;"></p>
+
+        <div class="input-group">
+            <input type="tel" id="mobile" placeholder="+91 9876543210" maxlength="13">
+        </div>
+
+        <div id="recaptcha-container"></div>
+
+        <button class="btn-primary" id="sendBtn">📲 Send OTP</button>
+
+        <div id="otpBox">
+            <div class="input-group" style="margin-top:16px;">
+                <input type="number" id="otp" placeholder="6-digit OTP likhein" maxlength="6">
+            </div>
+            <button class="btn-success" id="verifyBtn">✅ Verify & Login</button>
+            <div class="timer" id="timerText"></div>
+            <button class="resend-btn" id="resendBtn">OTP Dobara Bhejo</button>
+        </div>
+
+        <p id="message"></p>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
+    <!--
+        ✅ FIX #1: Firebase v10 ke liye sahi CDN — compat version use karo
+        Yeh "compat" SDK purana firebase.initializeApp() syntax support karta hai
+    -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
     <script>
-        // const firebaseConfig = {
-  apiKey: "AIzaSyBL8UoZy9F2b0hP0EPdEH9Z0InSnfjMC5w",
-  authDomain: "future-learn-85baa.firebaseapp.com",
-  projectId: "future-learn-85baa",
-  storageBucket: "future-learn-85baa.firebasestorage.app",
-  messagingSenderId: "960011606450",
-  appId: "1:960011606450:web:e0799215f4376981f0acab",
-  measurementId: "G-ZX4W49CGCP"
-};
-
-        // Firebase init
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-
-        let confirmationResult;
-        // reCAPTCHA
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-            size: 'invisible',
-            callback: () => {}
-        });
-
-        document.getElementById('sendBtn').onclick = () => {
-            let phone = document.getElementById('mobile').value;
-            if (!phone) { alert("Number likho"); return; }
-            if (!phone.startsWith('+')) phone = '+' + phone;
-            auth.signInWithPhoneNumber(phone, window.recaptchaVerifier)
-                .then((result) => {
-                    confirmationResult = result;
-                    document.getElementById('otpBox').style.display = 'block';
-                    document.getElementById('message').innerText = "OTP bhej diya!";
-                })
-                .catch((err) => alert("Error: " + err.message));
+        // ✅ FIX #2: Comment hata diya — pehle "// const firebaseConfig" tha
+        // Apni actual Firebase config yahan rakho
+        const firebaseConfig = {
+            apiKey: "AIzaSyBL8UoZy9F2b0hP0EPdEH9Z0InSnfjMC5w",
+            authDomain: "future-learn-85baa.firebaseapp.com",
+            projectId: "future-learn-85baa",
+            storageBucket: "future-learn-85baa.firebasestorage.app",
+            messagingSenderId: "960011606450",
+            appId: "1:960011606450:web:e0799215f4376981f0acab",
+            measurementId: "G-ZX4W49CGCP"
         };
 
-        document.getElementById('verifyBtn').onclick = () => {
-            let code = document.getElementById('otp').value;
-            if (!code) { alert("OTP likho"); return; }
-            confirmationResult.confirm(code)
-                .then((user) => alert("Login ho gaya! Welcome " + user.user.phoneNumber))
-                .catch(() => alert("OTP galat hai"));
+        // ✅ FIX #3: try-catch se Firebase init karo — error visible hoga
+        try {
+            firebase.initializeApp(firebaseConfig);
+        } catch(e) {
+            document.getElementById('firebase-error').style.display = 'block';
+            console.error("Firebase Init Error:", e);
+        }
+
+        const auth = firebase.auth();
+        let confirmationResult;
+        let timerInterval;
+
+        // ✅ reCAPTCHA setup
+        function setupRecaptcha() {
+            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                size: 'invisible',
+                callback: () => { console.log("reCAPTCHA verified"); }
+            });
+        }
+        setupRecaptcha();
+
+        // ✅ Helper: message dikhao
+        function showMsg(text, type) {
+            const el = document.getElementById('message');
+            el.textContent = text;
+            el.className = '';
+            el.classList.add('msg-' + type);
+        }
+
+        // ✅ Timer function
+        function startTimer(seconds) {
+            let remaining = seconds;
+            document.getElementById('timerText').textContent = `OTP valid hai: ${remaining}s`;
+            document.getElementById('resendBtn').style.display = 'none';
+            timerInterval = setInterval(() => {
+                remaining--;
+                if (remaining <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timerText').textContent = 'OTP expire ho gaya';
+                    document.getElementById('resendBtn').style.display = 'block';
+                } else {
+                    document.getElementById('timerText').textContent = `OTP valid hai: ${remaining}s`;
+                }
+            }, 1000);
+        }
+
+        // ✅ Send OTP
+        document.getElementById('sendBtn').onclick = async () => {
+            let phone = document.getElementById('mobile').value.trim();
+            if (!phone) { showMsg("❌ Phone number likhein", "error"); return; }
+            if (!phone.startsWith('+')) phone = '+91' + phone.replace(/\D/g, '');
+
+            const btn = document.getElementById('sendBtn');
+            btn.disabled = true;
+            btn.textContent = "Bhej raha hoon...";
+            showMsg("", "info");
+
+            try {
+                confirmationResult = await auth.signInWithPhoneNumber(phone, window.recaptchaVerifier);
+                document.getElementById('otpBox').style.display = 'block';
+                showMsg("✅ OTP bhej diya! " + phone + " check karo", "success");
+                startTimer(60);
+                btn.textContent = "OTP Bheja ✓";
+            } catch(err) {
+                console.error("OTP Error:", err);
+                btn.disabled = false;
+                btn.textContent = "📲 Send OTP";
+
+                // Common errors Hindi mein
+                if (err.code === 'auth/invalid-phone-number')
+                    showMsg("❌ Phone number galat hai. +91 ke saath likhein", "error");
+                else if (err.code === 'auth/too-many-requests')
+                    showMsg("❌ Zyada attempts! Kuch der baad try karo", "error");
+                else if (err.code === 'auth/captcha-check-failed')
+                    showMsg("❌ reCAPTCHA fail hua. Page refresh karo", "error");
+                else
+                    showMsg("❌ Error: " + err.message, "error");
+
+                // reCAPTCHA reset
+                if (window.recaptchaVerifier) {
+                    window.recaptchaVerifier.clear();
+                    setupRecaptcha();
+                }
+            }
+        };
+
+        // ✅ Verify OTP
+        document.getElementById('verifyBtn').onclick = async () => {
+            const code = document.getElementById('otp').value.trim();
+            if (!code || code.length !== 6) { showMsg("❌ 6-digit OTP likhein", "error"); return; }
+            if (!confirmationResult) { showMsg("❌ Pehle OTP bhejo", "error"); return; }
+
+            const btn = document.getElementById('verifyBtn');
+            btn.disabled = true;
+            btn.textContent = "Verify ho raha hai...";
+
+            try {
+                const result = await confirmationResult.confirm(code);
+                clearInterval(timerInterval);
+                showMsg("🎉 Login ho gaya! Welcome: " + result.user.phoneNumber, "success");
+                btn.textContent = "✅ Logged In!";
+                // Yahan aap apna dashboard redirect laga sakte ho:
+                // setTimeout(() => { window.location.href = "./dashboard.html"; }, 1500);
+            } catch(err) {
+                btn.disabled = false;
+                btn.textContent = "✅ Verify & Login";
+                if (err.code === 'auth/invalid-verification-code')
+                    showMsg("❌ OTP galat hai. Dobara check karo", "error");
+                else if (err.code === 'auth/code-expired')
+                    showMsg("❌ OTP expire ho gaya. Dobara bhejo", "error");
+                else
+                    showMsg("❌ " + err.message, "error");
+            }
+        };
+
+        // ✅ Resend OTP
+        document.getElementById('resendBtn').onclick = () => {
+            document.getElementById('sendBtn').disabled = false;
+            document.getElementById('sendBtn').textContent = "📲 Send OTP";
+            document.getElementById('otpBox').style.display = 'none';
+            document.getElementById('resendBtn').style.display = 'none';
+            showMsg("Phone number confirm karo aur dobara Send OTP dabao", "info");
+            setupRecaptcha();
         };
     </script>
 </body>
