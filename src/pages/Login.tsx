@@ -15,8 +15,7 @@ const Login = () => {
   const goToRolePage = async (uid: string) => {
     const snap = await getDoc(doc(db, 'users', uid));
     const userRole = snap.data()?.role || 'student';
-    if (userRole === 'admin') navigate('/admin');
-    else navigate('/student');
+    navigate(userRole === 'admin' ? '/admin' : '/student', { replace: true });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,8 +32,7 @@ const Login = () => {
           role,
           createdAt: new Date()
         });
-        if (role === 'admin') navigate('/admin');
-        else navigate('/student');
+        navigate(role === 'admin' ? '/admin' : '/student', { replace: true });
       }
     } catch (err: any) {
       setError(err.message);
