@@ -12,7 +12,7 @@ const Login = () => {
   const [role, setRole] = useState('student');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  // Already logged in hai toh redirect karo
+  
 useEffect(() => {
   const unsub = onAuthStateChanged(auth, async (user) => {
     if (user) {
