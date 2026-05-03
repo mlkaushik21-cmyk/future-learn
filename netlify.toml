@@ -1,11 +1,9 @@
-[build]
-  command = "npm run build"
-  publish = "dist"
-
-[build.environment]
-  SECRETS_SCAN_ENABLED = "false"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Content-Security-Policy = "default-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://www.gstatic.com; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://api.fontshare.com;"
