@@ -1,4 +1,5 @@
 import React from 'react';
+import Admin from './pages/Admin';  //
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -13,6 +14,7 @@ function App() {
         <Navbar />
         <main className="flex-grow">
           <Routes>
+            <Route path="/admin" element={<Admin />} />
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
